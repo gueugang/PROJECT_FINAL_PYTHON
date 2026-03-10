@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>   
+    <title>Document</title>
+</head>
+<body>
+    {% load static %}
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+      <div class="max-w-6xl mx-auto px-4 py-12 lg:py-20">
+        <!-- {/* Header */} -->
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center gap-3 mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-2xl flex items-center justify-center shadow-lg">
+              <img src="{% static 'gestions/assets/icones/box (1).png'%}" alt="" >
+            </div>
+          </div>
+          <h1 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+            Bienvenue sur <span class="text-[#2563EB]">InventoryPro</span>
+          </h1>
+          <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            La solution moderne de gestion de stock pour optimiser votre activité et gagner en productivité
+          </p>
+          <Button class="text-lg rounded-[5px] p-3 text-white shadow-xl hover:scale-105 bg-[#2563EB] ">
+            <a href="{%url 'login' %}">
+            Accéder au tableau de bord
+            <img src="{% static 'gestions/assets/icones/arrow-right.png'%}" class=" w-5 h-5"alt="">
+            <!-- <ArrowRight class="w-5 h-5" /> -->
+             </a>
+          </Button>
+        </div>
+
+        <!-- {/* Illustration */} -->
+        <div class="mb-16 rounded-2xl overflow-hidden shadow-2xl">
+          <img 
+            src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=1200&h=600&fit=crop" 
+            alt="Warehouse management"
+            class=" w-full h-80 "
+          />
+        </div>
+
+        <!-- {/* Features Grid */} -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return ( -->
+              <div 
+                id="index" class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#2563EB] transition-all duration-300 group"
+              >
+                <div class="w-12 h-12 bg-blue-300 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#2563EB] transition-colors">
+                  <img src="{% static 'gestions/assets/icones/box (1).png'%}" alt="" class="w-6 h-6 text-[#2563EB] group-hover:text-white transition-colors" />
+                </div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2">Gestion des produits</h3>
+                <p class="text-sm text-gray-600">Organisez et suivez votre inventaire en temps réel</p>
+              </div>
+              <div 
+                id=""
+                class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#2563EB] transition-all duration-300 group"
+              >
+                <div class="w-12 h-12 bg-blue-300 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#2563EB] transition-colors">
+                  <img src="{% static 'gestions/assets/icones/trending-up (1).png'%}" alt="" class="w-6 h-6 text-[#2563EB] group-hover:text-white transition-colors" />
+                </div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2">Statistiques détaillées</h3>
+                <p class="text-sm text-gray-600">Analysez les tendances et optimisez votre stock</p>
+              </div>
+              <div 
+                id=""
+                class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#2563EB] transition-all duration-300 group"
+              >
+                <div class="w-12 h-12 bg-blue-300 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#2563EB] transition-colors">
+                  <img src="{% static 'gestions/assets/icones/users-round (2).png'%}" alt="" class="w-6 h-6 text-[#2563EB] group-hover:text-white transition-colors" />
+                </div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2">Gestion des fournisseurs</h3>
+                <p class="text-sm text-gray-600">Centralisez vos contacts et commandes</p>
+              </div>
+              <div 
+                id=""
+                class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#2563EB] transition-all duration-300 group"
+              >
+              <div class="w-12 h-12 bg-blue-300 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#2563EB] transition-colors">
+                  <img src="{% static 'gestions/assets/icones/chart-column.png'%}" alt="" class="w-6 h-6 text-[#2563EB] group-hover:text-white transition-colors" />
+                </div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2">Suivi des mouvements</h3>
+                <p class="text-sm text-gray-600">Historique complet des entrées et sorties</p>
+              </div>
+            <!-- );
+          })} -->
+        </div>
+
+        <!-- /* CTA Section  -->
+        <div class="mt-16 bg-gradient-to-r from-[#2563EB] to-[#10B981] rounded-2xl p-8 lg:p-12 text-center text-white shadow-xl">
+          <h2 class="text-3xl font-bold mb-4">Prêt à optimiser votre gestion de stock ?</h2>
+          <p class="text-lg mb-6 opacity-90">
+            Découvrez toutes les fonctionnalités de notre plateforme
+          </p>
+          <a href="{% url 'register'%}">
+          <Button class="bg-white text-lg p-4 rounded-lg text-[#2563EB] hover:bg-gray-200">
+            Commencer maintenant
+          </Button>
+          </a>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

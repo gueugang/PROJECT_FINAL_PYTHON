@@ -1,0 +1,109 @@
+{% extends 'base.html' %} {% block content %}
+{% load static %} 
+    <div class="space-y-6">
+                
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestion des fournisseurs</h1>
+                    <p class="text-gray-600">{{suppliers.count}} fournisseurs actifs</p>
+                    </div>
+                    {% if request.user.administrateur.role == "Administrateur" %}
+                        <a href="{% url 'supplier_create' %}">
+                            <Button class="shadow-md text-white bg-[#2562EB]  rounded-[5px] px-4 py-2 hover:shadow-xl">
+                            <span class="font-bold text-xl"> +  </span> Ajouter un fournisseur
+                            </Button>
+                        </a>
+                    {% endif %}
+                </div>
+
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for supplier in suppliers %}
+                    <div 
+                        id=""
+                        class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#2563EB] transition-all duration-300">
+                        
+                        <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-xl flex items-center justify-center">
+                            <span class="text-2xl font-bold text-white avatar" id="">
+                            
+                            </span>
+                        </div>
+                        
+                        <div class="bg-blue-50 px-3 py-1 rounded-full">
+                            <span class="text-xs font-medium text-[#2563EB]">Actif</span>
+                        </div>
+                        </div>
+
+                         <!-- Name  -->
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4 nom" id="">
+                        {{supplier.name}}
+                        </h3>
+
+                        <!--  Infos -->
+                        <div class="space-y-3 mb-4">
+                        <div class="flex items-center gap-3 text-sm text-gray-600">
+                            <img src="{% static 'gestions/assets/icones/phone (1).png'%}" alt="" class="w-4 h-4 text-gray-400" />
+                            <span>{{supplier.phone}} </span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-gray-600">
+                            <img src="{% static 'gestions/assets/icones/mail (1).png'%}" alt class="w-4 h-4 text-gray-400" />
+                            <span class="truncate">{{supplier.email}} </span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-gray-600">
+                            <img src="{% static 'gestions/assets/icones/package.png'%}" alt="" class="w-4 h-4 text-gray-400" />
+                            <span>5 produits fourni</span>
+                        </div>
+                        </div>
+
+                        <!--  Actions  -->
+                        <div class="flex gap-2 pt-4 border-t border-gray-100">
+                        <Button 
+                            class="flex items-center gap-1 " >
+                            <img src="{% static 'gestions/assets/icones/mail (1).png'%}" alt="" class="w-4 h-4" />
+                            <span>Contacter</span>
+                        </Button>
+                        <Button class=" flex-1 text-white bg-[#2562EB]  rounded-xl shadow-md" >
+                            Voir produits
+                        </Button>
+                        </div>
+                    </div>
+                    <script>
+document.querySelectorAll(".nom").forEach((el, index) => {
+
+    const fullName = el.textContent;
+
+    const initials = fullName
+        .split(" ")
+        .map(word => word[0])
+        .join("")
+        .toUpperCase();
+
+    document.querySelectorAll(".avatar")[index].textContent = initials;
+});
+</script>
+                    {% endfor %}
+                    
+                </div>
+
+                
+                <div class="bg-gradient-to-r from-[#2563EB] to-[#10B981] rounded-xl p-8 text-white">
+                    <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <p class="text-4xl font-bold mb-2">{{suppliers.count}}</p>
+                        <p class="text-blue-100">Fournisseurs actifs</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-4xl font-bold mb-2">
+                        02
+                        </p>
+                        <p class="text-blue-100">Produits référencés</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-4xl font-bold mb-2">98%</p>
+                        <p class="text-blue-100">Taux de satisfaction</p>
+                    </div>
+                    </div>
+                </div>  
+
+                {% endblock %}

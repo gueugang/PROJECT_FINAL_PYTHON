@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="../styles/style.css">
+
+    <title>Document</title>
+</head>
+<body>
+    {% load static %}
+    <div class="flex flex-row  lg:w-[99vw]" >
+        <div class="lg:w-[20vw] ">
+            <aside 
+                class="fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-50 transition-transform duration-300 ease-in-out
+              ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} w-64">
+                <div class="flex flex-col  h-full ">
+                
+                    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-lg flex items-center justify-center">
+                                <img src="{% static 'gestions/icones/box (1).png' %}" alt="" >
+                            </div>
+                            <div>
+                                <h1 class="font-bold text-gray-900">InventoryPro</h1>
+                                <p class="text-xs text-gray-500">Gestion de stock</p>
+                            </div>
+                        </div>
+                        <button class="lg:hidden text-gray-500 hover:text-gray-700">
+                            <span class="text-xl">X</span>
+                        </button>
+                    </div>
+                    <nav class="flex-1 p-4 space-y-1 ">
+                        <a href="../test.html">
+                        <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                            
+                            text-gray-700 hover:bg-gray-100">
+                            <img src="{% static 'gestions/icones/house (1).png'%}" alt="" class="h-5 w-5">
+                            <p class="font-medium"> Accueil</p>
+                        </div>
+                        </a>
+                        <a href="./dashbord.html">
+                        <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 
+                            text-gray-700 hover:bg-gray-100">
+                            <img src="{% static 'gestions/assets/icones/layout-dashboard (1).png'%}" alt="" class="h-5 w-5">
+                            <p class="font-medium"> Tableau de bord</p>
+                        </div>
+                        </a>
+                        <a href="{%url 'produit'%}">
+                        <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                            
+                            text-gray-700 hover:bg-gray-100">
+                            <img src="{% static 'gestions/assets/icones/package.png'%}" alt="" class="h-5 w-5">
+                            <p class="font-medium"> Produits</p>
+                        </div>
+                        </a>
+                        <a href="{% url 'supplier'%}">
+                        <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                            
+                            text-gray-700 hover:bg-gray-100">
+                            <img src="{% static 'gestions/assets/icones/users-round (3).png'%}" alt="" class="h-5 w-5">
+                            <p class="font-medium"> Fournisseur</p>
+                        </div>
+                        </a>
+                        <a href="{%url 'mouvement' %}">
+                        <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                              
+                            text-gray-700 hover:bg-gray-100">
+                            <img src="{% static 'gestions/assets/icones/trending-up (3).png'%}" alt="" class="h-5 w-5">
+                            <p class="font-medium"> Mouvement</p>
+                        </div>
+                        </a>
+                        <script>
+                            const items = document.querySelectorAll(".menu-item");
+
+                            items.forEach(item => {
+                                item.addEventListener("click", () => {
+                                items.forEach(i => {
+                                    i.classList.remove("bg-[#2563EB]", "text-white", "shadow-md");
+                                });
+
+                                item.classList.add("bg-[#2563EB]", "text-white", "shadow-md");
+                                });
+                            });
+                        </script>
+                        <a href="{%url 'category_create' %}">
+                        <img src="{% static 'gestions/assets/icones/chart-bar-stacked.png'%}" alt="">
+                        </a>
+                        <a href="{%url 'fournir_create' %}">
+                        <img src="{% static 'gestions/assets/icones/cable.png'%}" alt="">
+                        </a>
+
+                    </nav>
+                    <div class="p-4 border-t border-gray-200 mt-[10vh]">                        <div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-4">
+                            <p class="text-sm font-medium text-gray-900 mb-1">Besoin d'aide ?</p>
+                            <p class="text-xs text-gray-600 mb-3">Consultez notre documentation</p>
+                            <button class="w-full bg-white text-[#2563EB] px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+                                Documentation
+                            </button>
+                        </div>
+                    </div>
+            </aside>
+            
+        </div>
+        <div class="ml-0 lg:w-[80vw]">
+        
+            <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+                <div class="flex items-center justify-between px-4 lg:px-6 h-16">
+                                <!-- {/* Left side */} -->
+                    <div class="flex items-center gap-4 flex-1">
+                    <button
+                                   
+                        class="lg:hidden text-gray-600 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                        <img src="../assets/icones/menu (2).png" alt="" class="w-6 h-6" />
+                    </button>
+
+                    <!-- {/* Search bar */} -->
+                    <div class="relative flex-1 max-w-md">
+                        <img src="{% static 'gestions/assets/icones/search.png'%}" alt="" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <input
+                        type="text"
+                        placeholder="Rechercher un produit, fournisseur..."
+                        class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent transition-all"
+                        />
+                    </div>
+                    </div>
+
+                                
+                    <div class="flex items-center gap-3">
+                    <!-- {/* Notifications */} -->
+                        <button class="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                            <img src="{% static 'gestions/assets/icones/bell (1).png'%}" alt="" class="w-5 h-5" />
+                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+
+                        <!-- {/* Profile */} -->
+                        <div class="flex items-center gap-3 pl-3 border-l border-gray-200">
+                            
+                            <div class="hidden md:block text-right">
+                                <p class="text-sm font-medium text-gray-900" id="profil">{{user.username}}</p>
+                                <p class="text-xs text-gray-500">{% if user.administrateur %}Administrateur{% else %}Magasinier{% endif %} </p>
+                            </div>
+                            
+                            <div id="avatar"  class="w-10 h-10 text-white bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow">
+                                        
+                            </div>
+                            {% if user.is_authenticated %}
+                            
+                                <a href="{% url 'disconect' %}">Se déconnecter</a>
+                            {% else %}
+                                <a href="{% url 'login' %}">Se connecter</a>
+                            {% endif %}
+                            <script>
+                                const fullName = "{{user.username}}";
+
+                                const initials = fullName
+                                    .split(" ")
+                                    .map(word => word[0])
+                                    .join("")
+                                    .toUpperCase();
+
+                                document.getElementById("avatar").textContent = initials;
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+    
+    <!-- mouvement -->
+        <div> 
+            {% block content %}{% endblock %}
+        </div>
+
+           
+    </div>
+
+    
+</body>
+</html>

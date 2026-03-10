@@ -1,0 +1,6 @@
+<h1>Etez  vous su=ous sur de vouloir vous deconnecter</h1>
+
+<form method="post" action="{% url 'disconnect' %}">
+    {% csrf_token %}
+    <button type="submit">Déconnexion</button>
+</form>

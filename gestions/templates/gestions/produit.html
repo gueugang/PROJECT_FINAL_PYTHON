@@ -1,0 +1,149 @@
+{% extends 'base.html' %} {% block content %}
+{% load static %} 
+
+<div class="space-y-6  ">
+            
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestion des produits</h1>
+            <!-- ajout du nombre total des produits -->
+            <p class="text-gray-600"> produits au total</p>
+        </div>
+        {% if request.user.administrateur.role == "Administrateur" %}
+            <a href="{% url 'product_create' %} ">
+                <button class="shadow-xl rounded-[5px] bg-blue-600 hover:bg-blue-800 text-white h-10 px-4">
+                <span class="text-xl font-bold">+ </span> Ajouter un produit
+                </button>
+            </a>
+        {% endif %}
+
+    </div>
+
+    <div class="fle">
+
+                    
+        <!-- {/* Filters */} -->
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <div class="flex flex-col lg:flex-row gap-4">
+        <div class="relative flex-1">
+            <img src="{% static 'gestions/assets/icones/search.png'%}" alt="" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+            type="text"
+            placeholder="Rechercher un produit..."
+                        
+            onChange="(e) => setSearchTerm(e.target.value)"
+            class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent"
+            />
+        </div>
+        <select
+            value={selectedCategory}
+            onChange="(e) => setSelectedCategory(e.target.value)"
+            class="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent cursor-pointer"
+        >
+            <option value="all">Toutes les catégories</option>
+            <option value="all"> Electroniques</option>
+            <option value="all">Accessoires</option>
+            <option value="all">Audio</option>
+            <!-- ajouter la liste des categorie -->
+        </select>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        Produit
+                        </th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        Catégorie
+                        </th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        Quantité
+                            </th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Seuil d'alerte
+                                    </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Fournisseur
+                        </th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Statut
+                        </th>
+                        <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for product in products%}
+                                <tr 
+                        id="product.id" 
+                        class="hover:bg-gray-100 transition-colors h-20"
+                    >
+                        <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center gap-3">
+                            {% if product.image %}
+                                <img src="{{product.image.url}}" alt="{{ product.name }}"
+                                class="w-12 h-12 rounded-lg object-cover"
+                                />
+                            {% endif %}
+                            <div>
+                            <p class="font-medium text-gray-900">{{product.name}}</p>
+                            <p class="text-sm text-gray-500">{{product.id}}</p>
+                            </div>
+                        </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm text-gray-700">{{product.category}}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {%if product.stockQuantity <= product.alertThreshold %}
+                                    <span class="font-semibold text-red-600">{{product.stockQuantity}}</span>
+                                {% else %}
+                                    <span class="font-semibold text-green-600">{{product.stockQuantity}}</span>
+                                {% endif %} 
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm text-gray-700">{{product.alertThreshold}}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm text-gray-700">.fournisserur</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap ">
+                                {%if product.stockQuantity <= product.alertThreshold %}
+                                    <p class="p-2 h-7 text-xs rounded-xl w-20  bg-red-200 text-red-500">Stock faible</p>
+                                {% else %}
+                                    <p class="px-3 py-1 h-7 text-xs rounded-xl w-20  bg-green-200 text-green-500">en stock</p>
+
+                                {%endif%}
+
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{% url 'product_update' product.id %}">   
+                                    <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                    title="Modifier" >
+                                    <img src="{% static 'gestions/assets/icones/square-pen.png'%}" alt="" class="w-4 h-4" />
+                                    </button>
+                                </a>
+                                <button
+                                onClick="() => setDeleteModal({ isOpen: true, productId: product.id })"
+                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                title="Supprimer"
+                                >
+                                <img src="{% static 'gestions/assets/icones/trash-2 (1).png'%}" alt="" class="w-4 h-4" />
+                                </button>
+                            </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Document</title>
+</head>
+<body class="bg-black/50">
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white/80 rounded-xl shadow-md">
+<h1 class="text-2xl font-bold text-gray-800 mb-6">{{title}}</h1>
+<form method="post" enctype="multipart/form-data" class="space-y-4">
+  {% csrf_token %} {{ form.as_p }}
+  <div class="flex space-x-4 mt-6">
+    <button
+      type="submit"
+      class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+    >
+      Enregistrer
+    </button>
+    <a
+      href="{% url 'supplier' %}"
+      class="text-gray-600 hover:underline px-6 py-2"
+      >Annuler</a
+    >
+  </div>
+</form>
+<div class></div>
+
+</div>
+
+</body>
+</html> 
