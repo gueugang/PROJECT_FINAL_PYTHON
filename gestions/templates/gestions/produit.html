@@ -109,7 +109,13 @@
                             <span class="text-sm text-gray-700">{{product.alertThreshold}}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm text-gray-700">.fournisserur</span>
+                            <span class="text-sm text-gray-700">
+                                {% for fournir in product.fournir.all %}
+                                    {% comment %} {% if product == fournir.product %} {% endcomment %}
+                                        {{fournir.supplier}},
+                                    {% comment %} {% endif %} {% endcomment %}
+                                {% endfor %}</span>
+                                
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap ">
                                 {%if product.stockQuantity <= product.alertThreshold %}

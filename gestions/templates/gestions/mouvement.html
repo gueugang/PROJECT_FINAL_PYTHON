@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block content %}
-
+{% load static %}
  <div class="space-y-6">
       
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -32,7 +32,7 @@
                         <p class="text-xs text-gray-500 mt-1">unités</p>
                         </div>
                         <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                        <span class="text-2xl">📥</span>
+                        <img src="{% static "gestions/assets/icones/waves-arrow-down.png" %}" alt="">
                         </div>
                     </div>
                     </div>
@@ -45,7 +45,7 @@
                         <p class="text-xs text-gray-500 mt-1">unités</p>
                         </div>
                         <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                        <span class="text-2xl">📤</span>
+                        <img src="{% static "gestions/assets/icones/waves-arrow-up.png" %}" alt="">
                         </div>
                     </div>
                     </div>
@@ -61,7 +61,7 @@
                             <p class="text-xs text-gray-500 mt-1">unités</p>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                        <span class="text-2xl">📊</span>
+                        <img src="{% static "gestions/assets/icones/chart-column (2).png" %}" alt="">
                         </div>
                     </div>
                     </div>
@@ -71,30 +71,23 @@
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                     <div class="flex items-center gap-2">
-                        <img src="../assets/icones/funnel.png" alt="" class="w-5 h-5 text-gray-400" />
+                        <img src="{% static "gestions/assets/icones/funnel.png" %}" alt="" class="w-5 h-5 text-gray-400" />
                         <span class="text-sm font-medium text-gray-700">Filtrer par type:</span>
                     </div>
                     <div class="flex gap-2">
+                        <a href="?type=all">
+                        <button class="px-4 py-2 rounded-lg text-sm font-medium transition-colors "> Tous </button>
+                        </a>
+                        <a href="?type=entree">
                         <button
-                        
-                        class="px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                            filterType === 'all'
-                            ? 'bg-[#2563EB] text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }"
-                        >
-                        Tous
-                        </button>
-                        <button
-                        
                         class="px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                             filterType === 'entry'
                             ? 'bg-green-600 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }"
-                        >
-                        Entrées
-                        </button>
+                        }">
+                        Entrées</button>
+                        </a>
+                        <a href="?type=sortie">
                         <button
                         
                         class="px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -105,6 +98,7 @@
                         >
                         Sorties
                         </button>
+                        </a>
                     </div>
                     </div>
                 </div>
@@ -133,46 +127,74 @@
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
+                            {% for mouvement in mouvements %}
                         <!-- ajout du retour des mvt en bd -->
                             <tr 
                             id="mouvement_id"
-                            class="hover:bg-gray-50 transition-colors"
-                            >
+                            class="hover:bg-gray-50 transition-colors ">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <!-- '📥 Entrée' : '📤 Sortie -->
-                                <span class="bg-green-100 p-2 rounded-[20px]">📥 Entrée</span>
+                                
+                                {% if mouvement.type == "entree" %} 
+                                    <div class="bg-green-100 p-2 rounded-[20px] flex items-center">
+                                        <img src="{% static "gestions/assets/icones/waves-arrow-down.png" %}" alt=""> <span>Entrée</span>
+                                    </div>
+                                {% else %}
+                                    <div class="bg-red-100 p-2 rounded-[20px] flex items-center">   
+                                        <img src="{% static "gestions/assets/icones/waves-arrow-up.png" %}" alt=""> <span>Sortie</span>
+                                    </div>
+                                {% endif %}
+                                
                             </td>
                             <td class="px-6 py-4">
                                 <!-- nom du produit concerné -->
-                                <p class="font-medium text-gray-900">Ordinateur Portable HP ProBook</p>
+                                <p class="font-medium text-gray-900">{{mouvement.product}}</p>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="font-semibold text-green-600">
-                                <!-- movement.type === 'entry' ? 'text-green-600' : 'text-red-600' 
-                                
-                                {movement.type === 'entry' ? '+' : '-'}{movement.quantity}-->
-                                +15
+                                {% if mouvement.type == "entree" %} 
+                                + {{mouvement.quantity}}
+                                {% else %}
+                                - {{mouvement.quantity}}
+                                {% endif %}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-2 text-sm text-gray-600">
-                                <img src="../assets/icones/calendar.png" alt="" class="w-4 h-4 text-gray-400" />
-                                <!-- {formatDate(movement.date)} -->
-                                 11/02/2026
+                                <img src="{% static "gestions/assets/icones/calendar.png"%}" alt="" class="w-4 h-4 text-gray-400" />
+                                 {{mouvement.dateMvt}}
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-2">
                                 <div class="w-8 h-8 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center">
-                                    <span class="text-xs font-medium text-white">
+                                    <span class="text-xs font-medium text-white avatar">
                                     LN
                                     </span>
                                 </div>
-                                <span class="text-sm text-gray-700">Lauyc Ngoune</span>
+                                {% if mouvement.magasinier %}
+                                    <span class=" nom text-sm text-gray-700">{{mouvement.magasinier}}</span>
+                                {% else %}
+                                    <span class=" nom text-sm text-gray-700">{{mouvement.administrateur}}</span>
+                                {% endif %}
                                 </div>
+                                <script>
+document.querySelectorAll(".nom").forEach((el, index) => {
+
+    const fullName = el.textContent;
+
+    const initials = fullName
+        .split(" ")
+        .map(word => word[0])
+        .join("")
+        .toUpperCase();
+
+    document.querySelectorAll(".avatar")[index].textContent = initials;
+});
+</script>
                             </td>
                             </tr>
                             <!-- fin d'afficharge des mvt -->
+                        {% endfor %}
                         </tbody>
                     </table>
                     </div>

@@ -148,7 +148,7 @@
                             </div>
                             {% if user.is_authenticated %}
                             
-                                <a href="{% url 'disconect' %}">Se déconnecter</a>
+                                <a href="{% url 'disconnect' %}">Se déconnecter</a>
                             {% else %}
                                 <a href="{% url 'login' %}">Se connecter</a>
                             {% endif %}
@@ -174,7 +174,26 @@
             {% block content %}{% endblock %}
         </div>
 
-           
+         <!-- You can open the modal using ID.showModal() method -->
+        <button class="btn w-15 h-15 bg-gradient-to-br from-[#2563EB] to-[#10B981] fixed bottom-4 right-4 bg-white shadow-lg rounded-full 
+            " onclick="my_modal_3.showModal()"><span class="font-bold text-[30px] text-white
+                ">+</span></button>
+        <dialog id="my_modal_3" class="modal bg-gray/80">
+            <div class="modal-box fixed bottom-20 right-4 bg-gray/50  w-90 rounded-lg p-6 flex flex-col space-y-4 transform transition-all duration-700 ease-out">
+                <form method="dialog">
+                <button class="btn btn-lg hover:shadow-lg hover:bg-blue-500 text-white h-8 btn-ghost absolute right-2 top-2 font-bold text-[20px]">✕</button>
+                </form>
+                <button class="bg-white text-gray-500 rounded-xl hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-50"> Produits</button>
+                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-58"> Categorie</button>
+                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-65"> Fournisseur</button>
+                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-72"> Mouvement</button>
+                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8"> Gerer fournisseur</button>
+
+                
+            </div>
+        </dialog>  
+
+        
     </div>
 
     

@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User, Group
-from .models import Administrateur, Supplier, Product,Magasinier
+from .models import Administrateur, Supplier, Product,Magasinier, Category, Mouvement, Fournir
 from .forms import  SupplierForm, ProductForm, UserRegisterForm, CategoryForm, FournirForm, MouvementForm
 from django.contrib.auth import logout
 
@@ -11,14 +11,21 @@ def index(request):
     return render(request, 'gestions/index.html')
 @login_required
 def mouvement(request):
-    
-    return render(request, 'gestions/mouvement.html')
+    type_mvt = request.GET.get("type")
+    if type_mvt == "entree":
+        mouvements = Mouvement.objects.filter(type="entree")
+    elif type_mvt== "sortie":
+        mouvements = Mouvement.objects.filter(type="sortie")
+    else:
+        mouvements = Mouvement.objects.all().order_by('-created_at')
+    return render(request, 'gestions/mouvement.html', {'mouvements':mouvements})
 
 @login_required
 def produit(request,):
     products = Product.objects.all().order_by('-created_at')
+    fournirs = Fournir.objects.all()
     
-    return render(request, 'gestions/produit.html', {'products':products})
+    return render(request, 'gestions/produit.html', {'products':products, 'fournir': fournirs})
 
 @login_required
 def supplier(request):
@@ -42,7 +49,6 @@ def supplier_create(request):
     return render(request, 'gestions/supplier_form.html', {'form': form, 'title': 'Nouveau Fournisseur'})
 
 @login_required
-
 def product_update(request, id):
     product = get_object_or_404(Product, id= id)
     
@@ -52,12 +58,43 @@ def product_update(request, id):
         return redirect('produit')
     return render(request, "gestions/product_update.html", {"form": form, "titlt": "Modifier un Produit"})
 
+@login_required
+def supplier_update(request, id):
+    supplier = get_object_or_404(Supplier, id= id)
+    
+    form = SupplierForm(request.POST, instance=supplier)
+    if form.is_valid():
+        form.save()
+        return redirect('supplier')
+    return render(request, "gestions/supplier_create.html", {"form": form, "titlt": "Modifier les Informations Sur un Fournisseur"})
+
+@login_required
+def mouvement_update(request, id):
+    mouvement = get_object_or_404(Mouvement, id= id)
+    
+    form = MouvementForm(request.POST, instance=mouvement)
+    if form.is_valid():
+        form.save()
+        return redirect('mouvement')
+    return render(request, "gestions/produit_form.html", {"form": form, "titlt": "Modifier un Mouvement"})
+
+@login_required
+def category_update(request, id):
+    category = get_object_or_404(Category, id= id)
+    
+    form = CategoryForm(request.POST, instance=category)
+    if form.is_valid():
+        form.save()
+        return redirect('produit')
+    return render(request, "gestions/produit_form.html", {"form": form, "titlt": "Modifier une Category"})
+
+@login_required
 def category_create(request):
     form = CategoryForm(request.POST)
     if form.is_valid():
          form.save()
          return redirect('produit')
-    return render(request, "gestions/category_create.html", {"form": form, "title":"Category"})
+    return render(request, "gestions/category_create.html", {"form": form, "title":"Creer une Category"})
 
 
 @login_required
@@ -73,8 +110,8 @@ def mouvement_create(request):
     form = MouvementForm(request.POST)
     if form.is_valid():
         form.save()
-        return redirect('supplier')
-    return render(request, 'gestions/category_create.html', {'form':form, 'title':'Enregistree un movement'})
+        return redirect('mouvement')
+    return render(request, 'gestions/produit_form.html', {'form':form, 'title':'Enregistree un movement'})
 
 # creation des utilisateur : magasinier et administrateurs
 # @login_required
@@ -171,3 +208,17 @@ def profil(request):
 def disconnect(request):
     logout(request)
     return redirect("index")
+
+#---------test de mail
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+def envoyer_mail(request):
+    send_mail(
+        "Sujet du mail",
+        "Bonjour, ceci est un mail envoyé depuis Django",
+        settings.EMAIL_HOST_USER,
+        ["ngouneloic562@gmail.com"],
+        fail_silently=False,
+    )
