@@ -13,7 +13,7 @@
     <div class="flex flex-row  lg:w-[99vw]" >
         <div class="lg:w-[20vw] ">
             <aside 
-                class="fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-50 transition-transform duration-300 ease-in-out
+                class="md:hidden hidden lg:block fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-50 transition-transform duration-300 ease-in-out
               ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} w-64">
                 <div class="flex flex-col  h-full ">
                 
@@ -32,17 +32,19 @@
                         </button>
                     </div>
                     <nav class="flex-1 p-4 space-y-1 ">
-                        <a href="../test.html">
-                        <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
-                            
-                            text-gray-700 hover:bg-gray-100">
+                        <a href="{% url 'index'%}">
+                        <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-700 hover:bg-gray-100 ">
                             <img src="{% static 'gestions/icones/house (1).png'%}" alt="" class="h-5 w-5">
                             <p class="font-medium"> Accueil</p>
                         </div>
                         </a>
                         <a href="./dashbord.html">
                         <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 
-                            text-gray-700 hover:bg-gray-100">
+                            text-gray-700 hover:bg-gray-100 {% if request.resolver_match.url_name == 'dashbord' %}
+                            bg-[#2563EB] text-white shadow-md
+                            {% else %}
+                            text-gray-700 hover:bg-gray-100
+                            {% endif %}">
                             <img src="{% static 'gestions/assets/icones/layout-dashboard (1).png'%}" alt="" class="h-5 w-5">
                             <p class="font-medium"> Tableau de bord</p>
                         </div>
@@ -50,7 +52,11 @@
                         <a href="{%url 'produit'%}">
                         <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
                             
-                            text-gray-700 hover:bg-gray-100">
+                            text-gray-700 hover:bg-gray-100 {% if request.resolver_match.url_name == 'produit' %}
+                            bg-[#2563EB] text-white shadow-md
+                            {% else %}
+                            text-gray-700 hover:bg-gray-100
+                            {% endif %}">
                             <img src="{% static 'gestions/assets/icones/package.png'%}" alt="" class="h-5 w-5">
                             <p class="font-medium"> Produits</p>
                         </div>
@@ -58,7 +64,11 @@
                         <a href="{% url 'supplier'%}">
                         <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
                             
-                            text-gray-700 hover:bg-gray-100">
+                            text-gray-700 hover:bg-gray-100 {% if request.resolver_match.url_name == 'supplier' %}
+                                bg-[#2563EB] text-white shadow-md
+                                {% else %}
+                                text-gray-700 hover:bg-gray-100
+                                {% endif %}">
                             <img src="{% static 'gestions/assets/icones/users-round (3).png'%}" alt="" class="h-5 w-5">
                             <p class="font-medium"> Fournisseur</p>
                         </div>
@@ -66,24 +76,15 @@
                         <a href="{%url 'mouvement' %}">
                         <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
                               
-                            text-gray-700 hover:bg-gray-100">
+                            text-gray-700 hover:bg-gray-100 {% if request.resolver_match.url_name == 'mouvement' %}
+                                                            bg-[#2563EB] text-white shadow-md
+                                                            {% else %}
+                                                            text-gray-700 hover:bg-gray-100
+                                                            {% endif %}">
                             <img src="{% static 'gestions/assets/icones/trending-up (3).png'%}" alt="" class="h-5 w-5">
                             <p class="font-medium"> Mouvement</p>
                         </div>
                         </a>
-                        <script>
-                            const items = document.querySelectorAll(".menu-item");
-
-                            items.forEach(item => {
-                                item.addEventListener("click", () => {
-                                items.forEach(i => {
-                                    i.classList.remove("bg-[#2563EB]", "text-white", "shadow-md");
-                                });
-
-                                item.classList.add("bg-[#2563EB]", "text-white", "shadow-md");
-                                });
-                            });
-                        </script>
                         <a href="{%url 'category_create' %}">
                         <img src="{% static 'gestions/assets/icones/chart-bar-stacked.png'%}" alt="">
                         </a>
@@ -113,7 +114,7 @@
                                    
                         class="lg:hidden text-gray-600 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors"
                     >
-                        <img src="../assets/icones/menu (2).png" alt="" class="w-6 h-6" />
+                        <img src="{% static "gestions/assets/icones/menu (2).png"%}" alt="" class="w-6 h-6" />
                     </button>
 
                     <!-- {/* Search bar */} -->
@@ -178,16 +179,17 @@
         <button class="btn w-15 h-15 bg-gradient-to-br from-[#2563EB] to-[#10B981] fixed bottom-4 right-4 bg-white shadow-lg rounded-full 
             " onclick="my_modal_3.showModal()"><span class="font-bold text-[30px] text-white
                 ">+</span></button>
-        <dialog id="my_modal_3" class="modal bg-gray/80">
-            <div class="modal-box fixed bottom-20 right-4 bg-gray/50  w-90 rounded-lg p-6 flex flex-col space-y-4 transform transition-all duration-700 ease-out">
+        <dialog id="my_modal_3" class="modal bg-red-600">
+            <div class=></div>
+            <div class="modal-box fixed bottom-20 right-4 bg-black/60  w-90 rounded-lg p-6 flex flex-col items-end space-y-4 transform transition-all duration-700 ease-out">
                 <form method="dialog">
                 <button class="btn btn-lg hover:shadow-lg hover:bg-blue-500 text-white h-8 btn-ghost absolute right-2 top-2 font-bold text-[20px]">✕</button>
                 </form>
                 <button class="bg-white text-gray-500 rounded-xl hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-50"> Produits</button>
                 <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-58"> Categorie</button>
                 <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-65"> Fournisseur</button>
-                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-72"> Mouvement</button>
-                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8"> Gerer fournisseur</button>
+                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-73"> Mouvement</button>
+                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-81"> Gerer fournisseur</button>
 
                 
             </div>

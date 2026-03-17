@@ -157,7 +157,7 @@ class MouvementForm(forms.ModelForm):
         fields = ['product', 'dateMvt', 'quantity', 'valide', 'type', 'magasinier', 'administrateur']
         widgets ={
             'product': forms.Select(attrs={'class':TAILWIND_INPUT_CLASS}),
-            'dateMvt': forms.DateInput(attrs={'class':TAILWIND_INPUT_CLASS}),
+            'dateMvt': forms.DateInput(attrs={'class':TAILWIND_INPUT_CLASS, 'type': 'date'}),
             'quantity': forms.TextInput(attrs={'class':TAILWIND_INPUT_CLASS}),
             'valide': forms.TextInput(attrs={'class': TAILWIND_INPUT_CLASS}),
             'type': forms.Select(attrs={'class': TAILWIND_INPUT_CLASS}),

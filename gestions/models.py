@@ -51,7 +51,7 @@ class Product(models.Model):
     unitPrice = models.FloatField(null=True, blank=True )
     stockQuantity = models.IntegerField()
     alertThreshold = models.IntegerField()
-    image = models.ImageField(upload_to="gestions/", null=True, blank=True)
+    image = models.ImageField(upload_to="products/", null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="gestions", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):

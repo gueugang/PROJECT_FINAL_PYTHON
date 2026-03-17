@@ -3,6 +3,10 @@ from django.contrib.auth.models import User, Group
 from .models import Administrateur, Supplier, Product,Magasinier, Category, Mouvement, Fournir
 from .forms import  SupplierForm, ProductForm, UserRegisterForm, CategoryForm, FournirForm, MouvementForm
 from django.contrib.auth import logout
+from django.db.models import Sum, Count
+
+import csv
+from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -12,32 +16,46 @@ def index(request):
 @login_required
 def mouvement(request):
     type_mvt = request.GET.get("type")
+    total_entree = Mouvement.objects.filter(type="entree").aggregate(total_ent=Sum('quantity'))
+    total_sortie = Mouvement.objects.filter(type="sortie").aggregate(total_sort=Sum('quantity'))
+    difference = total_entree["total_ent"] - total_sortie["total_sort"]
     if type_mvt == "entree":
         mouvements = Mouvement.objects.filter(type="entree")
     elif type_mvt== "sortie":
         mouvements = Mouvement.objects.filter(type="sortie")
     else:
         mouvements = Mouvement.objects.all().order_by('-created_at')
-    return render(request, 'gestions/mouvement.html', {'mouvements':mouvements})
+    return render(request, 'gestions/mouvement.html', {'mouvements':mouvements, 'difference':difference, 'total_entree':total_entree["total_ent"], 'total_sortie':total_sortie["total_sort"]})
 
 @login_required
-def produit(request,):
+def produit(request):
     products = Product.objects.all().order_by('-created_at')
     fournirs = Fournir.objects.all()
+    category = request.GET.get("category")
     
-    return render(request, 'gestions/produit.html', {'products':products, 'fournir': fournirs})
+    if category:
+        products = products.filter(category_id=category)
+ 
+    categories = Category.objects.all()
+    print(categories)
+    return render(request, 'gestions/produit.html', {'products':products, 'fournir': fournirs, 'categories': categories})
 
 @login_required
 def supplier(request):
+    fournirs = Fournir.objects.values('supplier').annotate(total = Count('supplier'))
+    total = Fournir.objects.all().count()
+    print(fournirs)
     suppliers = Supplier.objects.all().order_by('-created_at')
-    return render(request, 'gestions/fournisseur.html', {'suppliers': suppliers})
+    return render(request, 'gestions/fournisseur.html', {'suppliers': suppliers,'fournirs':fournirs, 'total':total})
 
 @login_required
 def product_create(request):
     form = ProductForm(request.POST, request.FILES)
+    print(form.is_valid())
     if form.is_valid():
         form.save()
         return redirect('produit')
+    print(form.is_valid())
     return render(request, 'gestions/produit_form.html', {'form': form, 'title': 'Nouveau Produit'})   
 
 @login_required
@@ -50,19 +68,23 @@ def supplier_create(request):
 
 @login_required
 def product_update(request, id):
-    product = get_object_or_404(Product, id= id)
+    product = get_object_or_404(Product, pk=id)
     
-    form = ProductForm(request.POST, instance=product)
+    print(product)
+    
+    form = ProductForm(request.POST or None, request.FILES or None, instance=product)
+    print(form.is_valid())
     if form.is_valid():
         form.save()
         return redirect('produit')
-    return render(request, "gestions/product_update.html", {"form": form, "titlt": "Modifier un Produit"})
+    print(form.is_valid())
+    return render(request, "gestions/product_update.html", {"form": form, "title": "Modifier un Produit"})
 
 @login_required
 def supplier_update(request, id):
     supplier = get_object_or_404(Supplier, id= id)
     
-    form = SupplierForm(request.POST, instance=supplier)
+    form = SupplierForm(request.POST or None, instance=supplier)
     if form.is_valid():
         form.save()
         return redirect('supplier')
@@ -72,7 +94,7 @@ def supplier_update(request, id):
 def mouvement_update(request, id):
     mouvement = get_object_or_404(Mouvement, id= id)
     
-    form = MouvementForm(request.POST, instance=mouvement)
+    form = MouvementForm(request.POST or None, instance=mouvement)
     if form.is_valid():
         form.save()
         return redirect('mouvement')
@@ -82,7 +104,7 @@ def mouvement_update(request, id):
 def category_update(request, id):
     category = get_object_or_404(Category, id= id)
     
-    form = CategoryForm(request.POST, instance=category)
+    form = CategoryForm(request.POST or None, instance=category)
     if form.is_valid():
         form.save()
         return redirect('produit')
@@ -112,6 +134,13 @@ def mouvement_create(request):
         form.save()
         return redirect('mouvement')
     return render(request, 'gestions/produit_form.html', {'form':form, 'title':'Enregistree un movement'})
+
+def product_delete(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('produit')
+    return render(request, 'gestions/confirmation_delete.html', {'product': product, 'title':'le produit'})
 
 # creation des utilisateur : magasinier et administrateurs
 # @login_required
@@ -222,3 +251,30 @@ def envoyer_mail(request):
         ["ngouneloic562@gmail.com"],
         fail_silently=False,
     )
+    
+    
+def export_mouvements_csv(request):
+    # Création de la réponse HTTP avec type CSV
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="mouvements.csv"'
+
+        writer = csv.writer(response)
+
+        # En-têtes du fichier
+        writer.writerow(['product', 'dateMvt', 'quantity', 'valide', 'type', 'magasinier', 'administrateur'])
+
+        # Données
+        mouvements = Mouvement.objects.all()
+
+        for mouvement in mouvements:
+            writer.writerow([
+                mouvement.product,
+                mouvement.dateMvt,
+                mouvement.quantity,
+                mouvement.valide,
+                mouvement.type,
+                mouvement.magasinier,
+                mouvement.administrateur
+            ])
+
+        return response

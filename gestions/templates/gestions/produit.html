@@ -35,9 +35,9 @@
             class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent"
             />
         </div>
-        <select
+        {% comment %} <select
             value={selectedCategory}
-            onChange="(e) => setSelectedCategory(e.target.value)"
+            
             class="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent cursor-pointer"
         >
             <option value="all">Toutes les catégories</option>
@@ -45,7 +45,25 @@
             <option value="all">Accessoires</option>
             <option value="all">Audio</option>
             <!-- ajouter la liste des categorie -->
-        </select>
+        </select> {% endcomment %}
+        <form method="GET">
+            <select 
+                name="category"
+                onchange="this.form.submit()"
+                class="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent cursor-pointer"
+            >
+
+            <option value="">Toutes les catégories</option>
+
+            {% for cat in categories %}
+            <option value="{{ cat.id }}">
+                {{ cat.nameCategory }}
+            </option>
+            {% endfor %}
+
+            </select>
+        </form>
+
         </div>
     </div>
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -134,6 +152,7 @@
                                     <img src="{% static 'gestions/assets/icones/square-pen.png'%}" alt="" class="w-4 h-4" />
                                     </button>
                                 </a>
+                                <a href="{% url 'product_delete' product.id %}">
                                 <button
                                 onClick="() => setDeleteModal({ isOpen: true, productId: product.id })"
                                 class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -141,6 +160,7 @@
                                 >
                                 <img src="{% static 'gestions/assets/icones/trash-2 (1).png'%}" alt="" class="w-4 h-4" />
                                 </button>
+                                </a>
                             </div>
                             </td>
                         </tr>

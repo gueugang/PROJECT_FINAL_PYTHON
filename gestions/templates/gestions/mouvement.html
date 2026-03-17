@@ -6,7 +6,7 @@
                     <div>
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">Mouvements de stock</h1>
                     <!-- ajout du nombre total de mouvement -->
-                    <p class="text-gray-600">36 mouvements enregistrés</p>
+                    <p class="text-gray-600">{{mouvements.count}} mouvements enregistrés</p>
                     </div>
                     <div class="flex gap-2">
                     <a href="{%url 'mouvement_create'%}">
@@ -15,10 +15,12 @@
                         </Button>
                     </a>
                     <!-- ajouter le java pour le telechargement du csv -->
-                    <Button class="flex gap-3 rounded-[8px] shadow-md bg-gray-100 hover:shadow-xl hover:bg-gray-300 px-4 items-center">
-                        <img src="../assets/icones/download.png" alt="" class="w-5 h-5" />
+                    <a href="{% url 'export_mouvements_csv' %}">
+                    <Button class="flex gap-3 rounded-[8px] h-8 shadow-md bg-gray-100 hover:shadow-xl hover:bg-gray-300 px-4 items-center">
+                        <img src="{% static 'gestions/assets/icones/download.png'%}" alt="" class="w-5 h-5" />
                         Exporter CSV
                     </Button>
+                    </a>
                     </div>
                 </div>
 
@@ -28,7 +30,7 @@
                     <div class="flex items-center justify-between">
                         <div>
                         <p class="text-sm text-gray-600 mb-1">Total des entrées</p>
-                        <p class="text-3xl font-bold text-green-600 " id="total_entree">20</p>
+                        <p class="text-3xl font-bold text-green-600 " id="total_entree">{{total_entree}} </p>
                         <p class="text-xs text-gray-500 mt-1">unités</p>
                         </div>
                         <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -41,7 +43,7 @@
                     <div class="flex items-center justify-between">
                         <div>
                         <p class="text-sm text-gray-600 mb-1">Total des sorties</p>
-                        <p class="text-3xl font-bold text-red-600" id="total_sortie">16</p>
+                        <p class="text-3xl font-bold text-red-600" id="total_sortie">{{total_sortie}} </p>
                         <p class="text-xs text-gray-500 mt-1">unités</p>
                         </div>
                         <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
@@ -54,10 +56,14 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Différence</p>
-                            <p class="text-3xl font-bold ${totalEntries - totalExits >= 0 ? 'text-green-600' : 'text-red-600'}">
-                                <!-- {totalEntries - totalExits >= 0 ? '+' : ''}{totalEntries - totalExits} -->
-                                 4
-                            </p>
+                            {% if difference > 0 %}
+                            <p class="text-3xl font-bold  text-green-600 : 'text-red-600">
+                             + {{difference}}</p>
+                            {% else %}
+                            <p class="text-3xl font-bold text-red-600">
+                                -{{difference}}</p>
+                            {% endif %}
+                            
                             <p class="text-xs text-gray-500 mt-1">unités</p>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -150,10 +156,12 @@
                                 <p class="font-medium text-gray-900">{{mouvement.product}}</p>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="font-semibold text-green-600">
+                                
                                 {% if mouvement.type == "entree" %} 
+                                <span class="font-semibold text-green-600">
                                 + {{mouvement.quantity}}
                                 {% else %}
+                                <span class="font-semibold text-red-600">
                                 - {{mouvement.quantity}}
                                 {% endif %}
                                 </span>

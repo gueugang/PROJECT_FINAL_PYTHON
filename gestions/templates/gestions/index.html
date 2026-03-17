@@ -9,6 +9,55 @@
 <body>
     {% load static %}
     <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+       <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="flex items-center justify-between h-16">
+            
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
+              <div class="w-10 h-10 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-xl flex items-center justify-center">
+                <img src="{% static 'gestions/assets/icones/box (1).png'%}" alt="" class="w-6 h-6 text-white" />
+              </div>
+              <span class="text-xl font-bold text-gray-900">
+                Inventory<span class="text-[#2563EB]">Pro</span>
+              </span>
+            </div>
+
+            
+            <div class="hidden md:flex items-center gap-8">
+              <a href="#features" class="text-gray-600 hover:text-[#2563EB] transition-colors font-medium">
+                Fonctionnalités
+              </a>
+              <a href="#pricing" class="text-gray-600 hover:text-[#2563EB] transition-colors font-medium">
+                Tarifs
+              </a>
+              <a href="#testimonials" class="text-gray-600 hover:text-[#2563EB] transition-colors font-medium">
+                Témoignages
+              </a>
+            </div>
+
+            
+            <div class="flex items-center gap-3">
+              <a href="{%url 'login' %}" 
+              >
+                <Button
+                  class="hidden flex items-center gap-2 sm:flex hover:shadow-md  rounded-[5px] bg-gray-50 hover:bg-gray-100 text-gray-500 h-10 px-4"
+                >
+                  <img src="{% static 'gestions/assets/icones/log-in.png'%}" alt="" class="w-4 h-4" />
+                  <span>Connexion</span>
+                </Button>
+              </a>
+              <a href="{% url 'register' %}">
+              <Button
+                class="flex items-center gap-3  hover:shadow-xl shadow-md rounded-[10px] bg-blue-600 hover:bg-blue-800 text-white h-10 px-4"
+              >
+                <img src="{% static 'gestions/assets/icones/user-plus.png'%}" alt="" class="w-4 h-4" />
+                <span>Inscription </span>
+              </Button>
+            </a>
+            </div>
+          </div>
+        </div>
+      </nav>
       <div class="max-w-6xl mx-auto px-4 py-12 lg:py-20">
         <!-- {/* Header */} -->
         <div class="text-center mb-16">
@@ -23,29 +72,29 @@
           <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             La solution moderne de gestion de stock pour optimiser votre activité et gagner en productivité
           </p>
-          <Button class="text-lg rounded-[5px] p-3 text-white shadow-xl hover:scale-105 bg-[#2563EB] ">
-            <a href="{%url 'login' %}" class="flex items-center gap-2">
-            <span>Accéder au tableau de bord</span>
-            <img src="{% static 'gestions/assets/icones/arrow-right.png'%}" class=" w-5 h-5"alt="">
-            <!-- <ArrowRight class="w-5 h-5" /> -->
-             </a>
-          </Button>
+          <div class="mb-16 grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
+                <p class="text-3xl font-bold text-[#2563EB] mb-2">50K+</p>
+                <p class="text-sm text-gray-600">Produits gérés</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
+                <p class="text-3xl font-bold text-[#2563EB] mb-2">99.9%</p>
+                <p class="text-sm text-gray-600">Disponibilité</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
+                <p class="text-3xl font-bold text-[#2563EB] mb-2">99.9%</p>
+                <p class="text-sm text-gray-600">Support Technique</p>
+            </div>
+            </div>
         </div>
-
-        <!-- {/* Illustration */} -->
         <div class="mb-16 rounded-2xl overflow-hidden shadow-2xl">
           <img 
-            src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=1200&h=600&fit=crop" 
+            src="{% static "gestions/assets/icones/stock2.jpeg" %}" 
             alt="Warehouse management"
-            class=" w-full h-80 "
-          />
+            class=" w-full h-100 "/>
         </div>
-
-        <!-- {/* Features Grid */} -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return ( -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-5" id="features">
+         
               <div 
                 id="index" class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#2563EB] transition-all duration-300 group"
               >
@@ -87,6 +136,224 @@
               </div>
             <!-- );
           })} -->
+        </div>
+
+        <div class="mb-16 mt-5">
+          <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">
+            Pourquoi choisir InventoryPro ?
+          </h2>
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
+                  <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mb-4">
+                    <img src="{% static "gestions/assets/icones/zap.png" %}" alt="" class="w-6 h-6 text-white" />
+                  </div>
+                  <h3 class="font-semibold text-gray-900 mb-2">Rapide et Intuitif</h3>
+                  <p class="text-sm text-gray-600">Interface moderne conçue pour la productivité</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
+                  <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
+                    <img src="{% static "gestions/assets/icones/shield.png" %}" alt="" class="w-6 h-6 text-white" />
+                  </div>
+                  <h3 class="font-semibold text-gray-900 mb-2">Sécurisé</h3>
+                  <p class="text-sm text-gray-600">Vos données sont protégées et sauvegardées</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
+                  <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center mb-4">
+                    <img src="{% static "gestions/assets/icones/bell (2).png" %}" alt="" class="w-6 h-6 text-white" />
+                  </div>
+                  <h3 class="font-semibold text-gray-900 mb-2">Alertes Intelligentes</h3>
+                  <p class="text-sm text-gray-600">Notifications en cas de stock faible</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
+                  <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl flex items-center justify-center mb-4">
+                    <img src="{% static "gestions/assets/icones/file-spreadsheet (1).png" %}" alt="" class="w-6 h-6 text-white" />
+                  </div>
+                  <h3 class="font-semibold text-gray-900 mb-2">Rapports Export</h3>
+                  <p class="text-sm text-gray-600">Exportez vos données en CSV facilement</p>
+                </div>
+          </div>
+        </div>
+
+        <div class="mb-16 id="features"">
+          <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">
+            Comment ça fonctionne ?
+          </h2>
+          <div class="grid md:grid-cols-3 gap-8">
+
+            <!-- Étape 1 -->
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
+                    1
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                    Ajoutez vos produits
+                </h3>
+                <p class="text-gray-600">
+                    Créez votre catalogue de produits avec photos, catégories et fournisseurs
+                </p>
+            </div>
+
+            <!-- Étape 2 -->
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
+                    2
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                    Suivez les mouvements
+                </h3>
+                <p class="text-gray-600">
+                    Enregistrez les entrées et sorties pour un suivi en temps réel
+                </p>
+            </div>
+
+            <!-- Étape 3 -->
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
+                    3
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                    Analysez les données
+                </h3>
+                <p class="text-gray-600">
+                    Utilisez les statistiques pour optimiser votre gestion de stock
+                </p>
+            </div>
+
+          </div>
+        </div>
+
+        {% comment %} explication du fontionnement {% endcomment %}
+        <div class="mb-16" id="testimonials">
+          <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">
+            Ce que disent nos clients
+          </h2>
+          <div class="grid md:grid-cols-3 gap-6">
+              <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-12 h-12 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center text-white font-bold">
+                    SD
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-900">Sophie Dubois</p>
+                    <p class="text-xs text-gray-500">Magasinier (Responsable Logistique)</p>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">InventoryPro a transformé notre gestion de stock. Interface intuitive et gain de temps considérable !</p>
+                <p class="text-xs font-medium text-[#2563EB]">TechStore</p>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-12 h-12 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center text-white font-bold">
+                    ML
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-900">Marc Lyvan</p>
+                    <p class="text-xs text-gray-500">Administrateur (Gérant)</p>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Les alertes automatiques nous ont permis d'éviter plusieurs ruptures de stock. Excellent outil !</p>
+                <p class="text-xs font-medium text-[#2563EB]">ElectroPro</p>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-12 h-12 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center text-white font-bold">
+                    JM
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-900">Jean Marie</p>
+                    <p class="text-xs text-gray-500">Administrateur (Directrice des Achats)</p>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Solution complète et abordable. Le meilleur rapport qualité-prix du marché pour les PME.</p>
+                <p class="text-xs font-medium text-[#2563EB]">SupplyChain Plus</p>
+              </div>
+          </div>
+        </div>
+
+        {% comment %} precision de lutilisation {% endcomment %}
+        <div class="mb-16" id="pricing">
+          <div class="bg-white rounded-2xl p-8 lg:p-12 shadow-xl border border-gray-100">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">Tarification simple et transparente</h2>
+              <p class="text-gray-600">Commencez gratuitement, évoluez selon vos besoins</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="p-6 rounded-xl border-2 border-gray-200">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Starter</h3>
+                <p class="text-3xl font-bold text-[#2563EB] mb-4">Gratuit</p>
+                <ul class="space-y-3 mb-6">
+                    <li  class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Jusqu'à 100 produits
+                    </li>
+                    <li  class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Gestion basique
+                    </li>
+                    <li  class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Support email
+                    </li>
+                  
+                </ul>
+                <Button variant="secondary" class="w-full bg-gray-200 rounded-[5px] h-10 mt-8 hover:bg-blue-600 hover:shadow-xl hover:rounded-[10px] hover:text-white">Commencer</Button>
+              </div>
+              <div class="p-6 rounded-xl border-2 border-[#2563EB] bg-blue-50 relative">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#2563EB] text-white px-4 py-1 rounded-full text-xs font-medium">
+                  Populaire
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Business</h3>
+                <p class="text-3xl font-bold text-[#2563EB] mb-4">30 000Fcfa<span class="text-sm text-gray-500">/mois</span></p>
+                <ul class="space-y-3 mb-6">
+                    <li  class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Produits illimités
+                    </li>
+                    <li  class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Toutes les fonctionnalités
+                    </li>
+                    <li  class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Support prioritaire
+                    </li>
+                    <li  class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Exports CSV
+                    </li>
+                
+                </ul>
+                <Button class="w-full bg-gray-200 rounded-[5px] h-10 hover:bg-blue-600 hover:shadow-xl hover:rounded-[10px] hover:text-white">Essayer gratuitement</Button>
+              </div>
+              <div class="p-6 rounded-xl border-2 border-gray-200">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                <p class="text-3xl font-bold text-[#2563EB] mb-4">Sur mesure</p>
+                <ul class="space-y-3 mb-6">
+                    <li class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Solution personnalisée
+                    </li>
+                    <li class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      API & Intégrations
+                    </li>
+                    <li class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Support dédié 24/7
+                    </li>
+                    <li class="flex items-center gap-2 text-sm text-gray-600">
+                      <img src="{% static "gestions/assets/icones/check (2).png" %}" alt="" class="w-4 h-4 text-green-500" />
+                      Formation incluse
+                    </li>
+
+
+                </ul>
+                <Button variant="secondary" class="w-full bg-gray-200 rounded-[5px] h-10 hover:bg-blue-600 hover:shadow-xl hover:rounded-[10px] hover:text-white">Nous contacter</Button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- /* CTA Section  -->

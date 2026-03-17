@@ -52,7 +52,13 @@
                         </div>
                         <div class="flex items-center gap-3 text-sm text-gray-600">
                             <img src="{% static 'gestions/assets/icones/package.png'%}" alt="" class="w-4 h-4 text-gray-400" />
-                            <span>5 produits fourni</span>
+                            {% for fournir in fournirs %}
+                             {% if fournir.supplier == supplier.id %}
+                             {{fournir.total}}
+                             {% endif %}
+                                
+                            {% endfor %}
+                            <span> produits fourni</span>
                         </div>
                         </div>
 
@@ -95,12 +101,12 @@ document.querySelectorAll(".nom").forEach((el, index) => {
                     </div>
                     <div class="text-center">
                         <p class="text-4xl font-bold mb-2">
-                        02
+                        {{total}}
                         </p>
                         <p class="text-blue-100">Produits référencés</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-4xl font-bold mb-2">98%</p>
+                        <p class="text-4xl font-bold mb-2">93%</p>
                         <p class="text-blue-100">Taux de satisfaction</p>
                     </div>
                     </div>
