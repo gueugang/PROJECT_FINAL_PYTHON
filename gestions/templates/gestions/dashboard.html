@@ -1,0 +1,266 @@
+{% extends 'base.html' %} {% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+{% load static %}
+    <div class="space-y-6">
+
+
+        <!-- Page Header -->
+        <div class="pl-4">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+            Tableau de bord
+            </h1>
+            <p class="text-gray-600">
+            Vue d'ensemble de votre inventaire
+            </p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-6">
+
+            <!-- Card 1 -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <div class="flex justify-between items-center">
+                    <div class="space-y-4">
+                    <p class="text-xl text-gray-500">Stock total</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ totalStock }}</h2>
+                    <span class="text-sm text-green-600">+12%</span>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 flex items-center justify-center rounded-lg">
+                    <img src="{% static 'gestions/assets/icones/package.png'%}" alt="" class="h-5 w-5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <div class="flex justify-between items-center">
+                    <div class="space-y-4">
+                    <p class="text-xl text-gray-500">Produits en rupture</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ lowStockProducts|length }}</h2>
+                    <span class="text-sm text-green-600">-3</span>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 flex items-center justify-center rounded-lg">
+                        <img src="{% static 'gestions/assets/icones/bell (1).png'%}" alt="" class="w-5 h-5" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <div class="flex justify-between items-center">
+                    <div class="space-y-4">
+                    <p class="text-xl text-gray-500">Fournisseurs actifs</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ suppliers|length }}</h2>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 flex items-center justify-center rounded-lg">
+                    <img src="{% static 'gestions/assets/icones/users-round (3).png'%}" alt="" class="h-5 w-5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <div class="flex justify-between items-center">
+                    <div class="space-y-4">
+                    <p class="text-xl text-gray-500">Mouvements aujourd'hui</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ todayMovements|length }}</h2>
+                    <span class="text-sm text-green-600">+5</span>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 flex items-center justify-center rounded-lg">
+                    <img src="{% static 'gestions/assets/icones/layout-dashboard (1).png'%}" alt="" class="h-5 w-5">
+                    </div>
+                </div>
+            </div>
+
+         </div>
+
+    </div>
+
+
+    <!-- Chart (remplacé par placeholder Django) -->
+    <div class="bg-white rounded-xl p-6 shadow-sm my-4 h-[40vh]">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">
+            Évolution des entrées/sorties
+        </h2>
+
+        <div class="h-80 w-[70vw]">
+            <canvas id="stockChart" class="h-[50vh] w-[70vw]"></canvas>
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 grid-cols-1 gap-6">
+
+        <!-- Derniers mouvements -->
+        <div class="bg-white rounded-xl p-6 shadow-sm ">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                Derniers mouvements
+            </h2>
+
+            <div class="space-y-3">
+                {% for movement in recentMovements %}
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
+
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+
+                            {% if movement.type == "entree" %}
+                                <span class="px-2 py-1 text-xs bg-green-200 text-green-600 rounded">
+                                    Entrée
+                                </span>
+                            {% else %}
+                                <span class="px-2 py-1 text-xs bg-red-200 text-red-600 rounded">
+                                    Sortie
+                                </span>
+                            {% endif %}
+
+                            <span class="text-sm font-medium text-gray-900">
+                                {{ movement.product }}
+                            </span>
+                        </div>
+
+                        <p class="text-xs text-gray-500">
+                            {{ movement.quantity }} unités • {{ movement.date }}
+                        </p>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Stock faible -->
+        <div class="bg-white rounded-xl p-6 shadow-sm ">
+
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-red-600"><img src="{% static 'gestions/assets/icones/bell (1).png'%}" alt="" class="w-5 h-5" /></span>
+                <h2 class="text-xl font-semibold text-gray-900">
+                    Alertes stock faible
+                </h2>
+            </div>
+
+            <div class="space-y-3">
+
+                {% if lowStockProducts|length == 0 %}
+                    <p class="text-sm text-gray-500 text-center py-4">
+                        Aucune alerte pour le moment
+                    </p>
+                {% else %}
+
+                    {% for product in lowStockProducts %}
+                    <div class="flex items-center justify-between p-3 bg-red-50 border border-red-100 rounded-lg">
+
+                        <div class="flex items-center gap-3">
+                            <img src="{{ product.image.url }}"
+                                 class="w-10 h-10 rounded-lg object-cover" />
+
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">
+                                    {{ product.name }}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Seuil: {{ product.alertThreshold }} unités
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-red-600">
+                                {{ product.quantity }}
+                            </p>
+                            <p class="text-xs text-gray-500">restant</p>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+{% comment %} const data = {
+    labels: {{ dates|safe }},
+datasets: [
+    {
+        label: "Entrées",
+        data: {{ entries|safe }},
+    },
+    {
+        label: "Sorties",
+        data: {{ exits|safe }},
+    }
+]
+};
+
+new Chart(document.getElementById('stockChart'), {
+    type: 'line',
+    data: data
+}); {% endcomment %}
+document.addEventListener("DOMContentLoaded", function () {
+
+    const ctx = document.getElementById('stockChart');
+
+    if (!ctx) {
+        console.error("Canvas stockChart introuvable");
+        return;
+    }
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ dates|safe }},
+        datasets: [
+            {
+                label: "Entrées",
+                data: {{ entries|safe }},
+                borderWidth: 2,
+                borderColor: "#10B981",   // 👈 vert
+                backgroundColor: "#10B981",
+                tension: 0.4
+            },
+            {
+                label: "Sorties",
+                data: {{ exits|safe }},
+                borderWidth: 2,
+                borderColor: "#fe0506",   // 👈 vert
+                backgroundColor: "#ff0505",
+                tension: 0.4
+            }
+        ]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom' // 
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false // 
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false 
+                    },
+                     beginAtZero: true,
+                    ticks: {
+                        stepSize: 5  
+                    }
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

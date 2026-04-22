@@ -1,9 +1,14 @@
+from datetime import timedelta
+import json
+
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User, Group
 from .models import Administrateur, Supplier, Product,Magasinier, Category, Mouvement, Fournir
-from .forms import  SupplierForm, ProductForm, UserRegisterForm, CategoryForm, FournirForm, MouvementForm
-from django.contrib.auth import logout
-from django.db.models import Sum, Count
+from .forms import  SupplierForm, ProductForm, UserRegisterForm, CategoryForm, FournirForm, MouvementForm, LoginForm
+from django.contrib.auth import logout, authenticate, login
+from django.db.models import Sum, Count, F
+from django.contrib import messages
+from django.utils import timezone
 
 import csv
 from django.http import HttpResponse
@@ -35,7 +40,8 @@ def produit(request):
     
     if category:
         products = products.filter(category_id=category)
- 
+    else:
+        products = Product.objects.all().order_by('-created_at')
     categories = Category.objects.all()
     print(categories)
     return render(request, 'gestions/produit.html', {'products':products, 'fournir': fournirs, 'categories': categories})
@@ -135,6 +141,7 @@ def mouvement_create(request):
         return redirect('mouvement')
     return render(request, 'gestions/produit_form.html', {'form':form, 'title':'Enregistree un movement'})
 
+@login_required
 def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
@@ -142,52 +149,36 @@ def product_delete(request, pk):
         return redirect('produit')
     return render(request, 'gestions/confirmation_delete.html', {'product': product, 'title':'le produit'})
 
-# creation des utilisateur : magasinier et administrateurs
-# @login_required
-# def create_magasinier(request):
-#     if request.method == "POST":
+from django.db import transaction
+@transaction.atomic
+def valider_mouvement(request, pk):
+    mouvement = Mouvement.objects.select_for_update().get(pk=pk)
+    
+    if mouvement.valide:
+        messages.warning(request, "Ce mouvement a déjà été validé !")
+        return redirect('mouvement')  # déjà traité
+    
+    product = mouvement.product
+    print("====================================================")
+    print(mouvement.type)
+    if mouvement.type == 'entree':
+        product.stockQuantity += mouvement.quantity
+        
+    elif mouvement.type == 'sortie':
+        print("entrer jfkl")
+        if product.stockQuantity < mouvement.quantity:
+            
+            messages.error(request, "Stock insuffisant !")
+            return redirect('mouvement')
 
-#         user = User.objects.create_user(
-#             username=request.POST['username'],
-#             email=request.POST['email'],
-#             password=request.POST['password']
-#         )
+        product.stockQuantity -= mouvement.quantity
 
-#         Magasinier.objects.create(
-#             user=user,
-#             adress=request.POST['adress']
-#         )
+    product.save()
 
-#         group = Group.objects.get(name='Magasinier')
-#         user.groups.add(group)
-
-#         return redirect('login')
-
-#     return render(request,'create_magasinier.html')
-
-# @login_required
-# def create_admin(request):
-
-#     if request.method == "POST":
-
-#         user = User.objects.create_user(
-#             username=request.POST['username'],
-#             email=request.POST['email'],
-#             password=request.POST['password'],
-#             role =  request.POST['role']
-#         )
-
-#         Administrateur.objects.create(
-#             user=user,
-#             adress=request.POST['adress']
-#         )
-
-#         group = Group.objects.get(name='Administrateur')
-#         user.groups.add(group)
-
-#         return redirect('login')
-
-#     return render(request,'create_admin.html')
+    mouvement.valide = True
+    mouvement.save()
+    messages.success(request, f"Mouvement validé pour {product.name} !")
+    return redirect('mouvement')
 
 
 def register(request):
@@ -238,6 +229,23 @@ def disconnect(request):
     logout(request)
     return redirect("index")
 
+def login_in(request):
+    form = LoginForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect('produit')  # change selon ton projet
+            else:
+                form.add_error(None, "Nom d'utilisateur ou mot de passe incorrect")
+
+    return render(request, 'gestions/login.html', {'form': form})
 #---------test de mail
 
 from django.core.mail import send_mail
@@ -278,3 +286,60 @@ def export_mouvements_csv(request):
             ])
 
         return response
+    
+@login_required
+def dashboard(request):
+    # Produits
+    products = Product.objects.all()
+
+    # Stock total
+    total_stock = products.aggregate(total=Sum('stockQuantity'))['total'] or 0
+
+    # Produits en stock faible
+    low_stock_products = products.filter(stockQuantity__lte=F('alertThreshold'))
+
+    # Fournisseurs
+    suppliers = Supplier.objects.all()
+
+    # Mouvements aujourd'hui
+    today = timezone.now().date()
+    today_movements = Mouvement.objects.filter(dateMvt=today)
+
+    # Derniers mouvements
+    recent_movements = Mouvement.objects.order_by('-dateMvt')[:5]
+
+    # Données pour graphique (7 derniers jours)
+    dates = []
+    entries = []
+    exits = []
+
+    for i in range(6, -1, -1):
+        day = today - timedelta(days=i)
+        dates.append(day.strftime("%d/%m"))
+
+        day_entries = Mouvement.objects.filter(
+            dateMvt=day, type='entree'
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+        
+        day_exits = Mouvement.objects.filter(
+            dateMvt=day, type='sortie'
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+
+        entries.append(day_entries)
+        exits.append(day_exits)
+
+    #  Contexte
+    context = {
+        "totalStock": total_stock,
+        "lowStockProducts": low_stock_products,
+        "suppliers": suppliers,
+        "todayMovements": today_movements,
+        "recentMovements": recent_movements,
+
+        # Pour Chart.js
+        "dates": json.dumps(dates),
+        "entries": json.dumps(entries),
+        "exits": json.dumps(exits),
+    }
+
+    return render(request, "gestions/dashboard.html", context)

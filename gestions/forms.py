@@ -4,7 +4,7 @@ from .models import Administrateur, Supplier, Product, Category, Fournir, Mouvem
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
-TAILWIND_INPUT_CLASS = 'w-2xl px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400'
+TAILWIND_INPUT_CLASS = 'w-[40vw] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400'
 
 # class AdminForm(forms.ModelForm):
 #     class Meta:
@@ -47,7 +47,7 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ['name', 'description','unitPrice', 'stockQuantity', 'alertThreshold','image', 'category']
         widgets = {
-            'name': forms.TextInput(attrs={ 'class':'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400'}),
+            'name': forms.TextInput(attrs={ 'class':'lg: w-[40vw] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400'}),
             'description': forms.Textarea(attrs={ 'class': TAILWIND_INPUT_CLASS}),
             'unitPrice' : forms.TextInput(attrs={'class': TAILWIND_INPUT_CLASS}),
             'stockQuantity': forms.NumberInput(attrs ={'class': TAILWIND_INPUT_CLASS}),
@@ -127,17 +127,18 @@ class UserRegisterForm(UserCreationForm):
 #         model = User
 #         fields = ["username", "email", "password1", "password2", "name", "adress", "role"]
     
-class LoginForm(AuthenticationForm):
-
+class LoginForm(forms.Form):
     username = forms.CharField(
+        label="Nom d'utilisateur",
         widget=forms.TextInput(attrs={
-            "class": "w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            'class': TAILWIND_INPUT_CLASS
         })
     )
 
     password = forms.CharField(
+        label="Mot de passe",
         widget=forms.PasswordInput(attrs={
-            "class": "w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            'class': TAILWIND_INPUT_CLASS, 'id':'password'
         })
     )
     

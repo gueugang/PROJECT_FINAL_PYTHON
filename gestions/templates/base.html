@@ -9,6 +9,22 @@
     <title>Document</title>
 </head>
 <body>
+    {% if messages %}
+    <div id="toast-container" class="fixed top-4 right-4 space-y-2 z-50">
+    {% for message in messages %}
+    <div class="toast flex items-center justify-between px-4 py-2 rounded shadow-lg text-white
+        opacity-0 transform translate-x-6 transition-all duration-500
+        {% if message.tags == 'success' %}bg-green-500{% endif %}
+        {% if message.tags == 'warning' %}bg-yellow-400 text-black{% endif %}
+        {% if message.tags == 'error' %}bg-red-500{% endif %}
+        ">
+        <span>{{ message }}</span>
+        <button class="ml-2 font-bold text-lg" onclick="this.parentElement.remove()">×</button>
+    </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+
     {% load static %}
     <div class="flex flex-row  lg:w-[99vw]" >
         <div class="lg:w-[20vw] ">
@@ -38,9 +54,9 @@
                             <p class="font-medium"> Accueil</p>
                         </div>
                         </a>
-                        <a href="./dashbord.html">
+                        <a href="{%url 'dashboard'%}">
                         <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 
-                            text-gray-700 hover:bg-gray-100 {% if request.resolver_match.url_name == 'dashbord' %}
+                            text-gray-700 hover:bg-gray-100 {% if request.resolver_match.url_name == 'dashboard' %}
                             bg-[#2563EB] text-white shadow-md
                             {% else %}
                             text-gray-700 hover:bg-gray-100
@@ -85,20 +101,39 @@
                             <p class="font-medium"> Mouvement</p>
                         </div>
                         </a>
+                        {% if request.user.administrateur.role == "Administrateur" %}
                         <a href="{%url 'category_create' %}">
-                        <img src="{% static 'gestions/assets/icones/chart-bar-stacked.png'%}" alt="">
+                            <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-700 hover:bg-gray-100">
+                            <img src="{% static 'gestions/assets/icones/chart-bar-stacked.png'%}" class="h-5 w-5" alt="">
+                            <p class="font-medium">category</p>
+                            </div>
                         </a>
                         <a href="{%url 'fournir_create' %}">
-                        <img src="{% static 'gestions/assets/icones/cable.png'%}" alt="">
+                            <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-700 hover:bg-gray-100">
+                            <img src="{% static 'gestions/assets/icones/cable.png'%}" class="h-5 w-5" alt="">
+                            <p class="font-medium">selection fournisseur</p>
+                            </div> 
                         </a>
+                        {% endif %}
 
                     </nav>
-                    <div class="p-4 border-t border-gray-200 mt-[10vh]">                        <div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-4">
-                            <p class="text-sm font-medium text-gray-900 mb-1">Besoin d'aide ?</p>
-                            <p class="text-xs text-gray-600 mb-3">Consultez notre documentation</p>
-                            <button class="w-full bg-white text-[#2563EB] px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                                Documentation
-                            </button>
+                    <div class="mt-[8vh]">
+                        <div class="text-red-400 border bg-red-100 w-55 ml-5 rounded-[5px] hover:shadow-md  px-10 py-2 pb-2 hover:text-red-600">
+                        {% if user.is_authenticated %}
+                            
+                            <a href="{% url 'disconnect' %}" class=" flex items-center gap-2"><img src="{% static "gestions/assets/icones/log-out.png" %}" class="w-5 h-5"alt=""> <span>Se déconnecter</span></a>
+                        {% else %}
+                            <a href="{% url 'login' %}">Se connecter</a>
+                        {% endif %}
+                        </div>
+                        <div class="p-4 border-t border-gray-200 m">
+                                <div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-4">
+                                <p class="text-sm font-medium text-gray-900 mb-1">Besoin d'aide ?</p>
+                                <p class="text-xs text-gray-600 mb-3">Consultez notre documentation</p>
+                                <button class="w-full bg-white text-[#2563EB] px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+                                    Documentation
+                                </button>
+                            </div>
                         </div>
                     </div>
             </aside>
@@ -110,12 +145,71 @@
                 <div class="flex items-center justify-between px-4 lg:px-6 h-16">
                                 <!-- {/* Left side */} -->
                     <div class="flex items-center gap-4 flex-1">
-                    <button
-                                   
-                        class="lg:hidden text-gray-600 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                    >
-                        <img src="{% static "gestions/assets/icones/menu (2).png"%}" alt="" class="w-6 h-6" />
+                    
+                             <!-- modal de menu burger -->
+                    <button onclick="openMenuModal()" class="p-2 rounded">
+                        <img src="{% static "gestions/assets/icones/menu (2).png"%}" alt=" rien " class="w-6 h-6 hover:h-10" />
                     </button>
+                        <div id="menuModal" class="fixed inset-0 hidden bg-black/50 bg-opacity-50 z-50">
+
+                            <!-- Sidebar -->
+                            <div class="bg-white w-72 h-full p-4 shadow-xl">
+
+                                <!-- Bouton fermer -->
+                                <div class="flex justify-between items-center mb-4">
+                                    <h2 class="text-lg font-bold">Menu</h2>
+                                    <button onclick="closeMenuModal()" class="text-gray-600">✖</button>
+                                </div>
+
+                                <!-- TON MENU ICI -->
+                                <a href="{% url 'index'%}">
+                                    <div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100">
+                                        <img src="{% static 'gestions/icones/house (1).png'%}" class="h-5 w-5">
+                                        <p>Accueil</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'dashboard'%}">
+                                    <div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100">
+                                        <img src="{% static 'gestions/assets/icones/layout-dashboard (1).png'%}" class="h-5 w-5">
+                                        <p>Tableau de bord</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'produit'%}">
+                                    <div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100">
+                                        <img src="{% static 'gestions/assets/icones/package.png'%}" class="h-5 w-5">
+                                        <p>Produits</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'supplier'%}">
+                                    <div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100">
+                                        <img src="{% static 'gestions/assets/icones/users-round (3).png'%}" class="h-5 w-5">
+                                        <p>Fournisseur</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'mouvement' %}">
+                                    <div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100">
+                                        <img src="{% static 'gestions/assets/icones/trending-up (3).png'%}" class="h-5 w-5">
+                                        <p>Mouvement</p>
+                                    </div>
+                                </a>
+
+                                {% if request.user.administrateur.role == "Administrateur" %}
+                                <a href="{% url 'category_create' %}">
+                                    <div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100">
+                                        <img src="{% static 'gestions/assets/icones/chart-bar-stacked.png'%}" class="h-5 w-5">
+                                        <p>Category</p>
+                                    </div>
+                                </a>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                            
+
 
                     <!-- {/* Search bar */} -->
                     <div class="relative flex-1 max-w-md">
@@ -147,12 +241,7 @@
                             <div id="avatar"  class="w-10 h-10 text-white bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-full flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow">
                                         
                             </div>
-                            {% if user.is_authenticated %}
                             
-                                <a href="{% url 'disconnect' %}">Se déconnecter</a>
-                            {% else %}
-                                <a href="{% url 'login' %}">Se connecter</a>
-                            {% endif %}
                             <script>
                                 const fullName = "{{user.username}}";
 
@@ -180,24 +269,66 @@
             " onclick="my_modal_3.showModal()"><span class="font-bold text-[30px] text-white
                 ">+</span></button>
         <dialog id="my_modal_3" class="modal bg-red-600">
-            <div class=></div>
-            <div class="modal-box fixed bottom-20 right-4 bg-black/60  w-90 rounded-lg p-6 flex flex-col items-end space-y-4 transform transition-all duration-700 ease-out">
-                <form method="dialog">
-                <button class="btn btn-lg hover:shadow-lg hover:bg-blue-500 text-white h-8 btn-ghost absolute right-2 top-2 font-bold text-[20px]">✕</button>
-                </form>
-                <button class="bg-white text-gray-500 rounded-xl hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-50"> Produits</button>
-                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-58"> Categorie</button>
-                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-65"> Fournisseur</button>
-                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-73"> Mouvement</button>
-                <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-81"> Gerer fournisseur</button>
-
+            
+            <div class="modal-box fixed bg-black/60  w-full h-full ">
+                <div class="bg-gray/50 p-6 flex flex-col items-end space-y-4 transform transition-all duration-700 ease-out  fixed bottom-20 right-4">
                 
+                <a href="{% url 'product_create' %} ">
+                    <button class="bg-white text-gray-500 mt[50vh] rounded-xl hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-50"> Produits</button>
+                </a>
+                <a href="{% url 'category_create' %} ">
+                    <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-58"> Categorie</button>
+                </a>
+                <a href="{% url 'supplier_create' %} ">
+                    <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-65"> Fournisseur</button>
+                </a>
+                <a href="{% url 'mouvement_create' %} ">
+                    <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-73"> Mouvement</button>
+                </a>
+                <a href="{% url 'product_create' %} ">
+                    <button class="bg-white text-gray-500 rounded-lg hover:shadow-lg hover:bg-blue-500 hover:text-white h-8 w-81"> Gerer fournisseur</button>
+                </a>
+                <form method="dialog">
+                <button class="btn btn-lg bg-blue-500 w-30 rounded-[8px] hover:shadow-lg hover:bg-blue-700 text-white h-8 btn-ghost  font-semibold text-[20px]">Annuler</button>
+                </form>
+                
+            </div>
             </div>
         </dialog>  
 
         
     </div>
 
-    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toasts = document.querySelectorAll(".toast");
+
+            toasts.forEach((toast, index) => {
+                // Apparition avec léger décalage pour l'effet cascade
+                setTimeout(() => {
+                    toast.classList.remove("opacity-0", "translate-x-6");
+                    toast.classList.add("opacity-100", "translate-x-0");
+                }, index * 300);
+
+                // Disparition après 3s
+                setTimeout(() => {
+                    toast.classList.add("opacity-0", "translate-x-6");
+                    // Supprimer du DOM après la transition
+                    setTimeout(() => toast.remove(), 500);
+                }, 4000 + index * 300);
+            });
+        });
+    </script>
+    <script>
+        function openMenuModal() {
+            document.getElementById("menuModal").classList.remove("hidden");
+            document.getElementById("menuModal").classList.add("flex");
+        }
+
+        function closeMenuModal() {
+            document.getElementById("menuModal").classList.remove("flex");
+            document.getElementById("menuModal").classList.add("hidden");
+        }
+    </script>
 </body>
 </html>
