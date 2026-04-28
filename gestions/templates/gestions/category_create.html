@@ -6,11 +6,42 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>Document</title>
 </head>
-<body class="bg-black/50">
-<div class="max-w-4xl mx-auto mt-10 p-6 bg-white/80 rounded-xl shadow-md">
-<h1 class="text-2xl font-bold text-gray-800 mb-6">{{title}}</h1>
+<body class="">
+    {% load static  %}
+    <div class=" bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center p-4">
+      <div class="">
+        
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center gap-3 mb-4 cursor-pointer" >
+            <div class="w-12 h-12 bg-gradient-to-br from-[#2563EB] to-[#10B981] rounded-xl flex items-center justify-center">
+              <img src="{% static 'gestions/assets/icones/box (1).png'%}" alt="" class="w-7 h-7 text-white" />
+            </div>
+            <span class="text-2xl font-bold text-gray-900">
+              Inventory<span class="text-[#2563EB]">Pro</span>
+            </span>
+          </div>
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">{{title}}</h1>
+          <p class="text-gray-600">Gérer votre stock gratuitement</p>
+        </div>
+      </div>
+    </div>
+<div class="  mx-[18vw] my-10 p-6 bg-white/80 rounded-xl shadow-md">
+
 <form method="post" enctype="multipart/form-data" class="space-y-4">
-  {% csrf_token %} {{ form.as_p }}
+  {% csrf_token %}
+  {% for field in form %}
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600 mb-1">
+                {{ field.label }}
+            </label>
+
+            {{ field }}
+
+            {% if field.errors %}
+                <p class="text-red-500 text-sm">{{ field.errors }}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
   <div class="flex space-x-4 mt-6">
     <button
       type="submit"

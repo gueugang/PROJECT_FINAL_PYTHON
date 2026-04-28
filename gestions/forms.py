@@ -4,7 +4,7 @@ from .models import Administrateur, Supplier, Product, Category, Fournir, Mouvem
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
-TAILWIND_INPUT_CLASS = 'w-[40vw] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400'
+TAILWIND_INPUT_CLASS = 'w-[60vw]  px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400'
 
 # class AdminForm(forms.ModelForm):
 #     class Meta:
